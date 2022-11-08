@@ -129,17 +129,22 @@ export class VgsShowAttribute extends React.Component<VgsShowReactNativeProps> {
     );
   }
 
-  copyToClipboard():void{
+  copyToClipboard(): void {
     const handle = findNodeHandle(this._nativeRef);
-    const copy =  Platform.select({
-        ios: () => {
-          NativeModules.VgsShowReactNativeViewManager.copyToClipboard(handle);
-        },
-        android: () => {
-            UIManager.dispatchViewManagerCommand(handle, 'copyToClipboard' as any, []);
-        }
+    const copy = Platform.select({
+      ios: () => {
+        NativeModules.VgsShowReactNativeViewManager.copyToClipboard(handle);
+      },
+      android: () => {
+        UIManager.dispatchViewManagerCommand(
+          handle,
+          'copyToClipboard' as any,
+          []
+        );
+      },
     });
-    copy()
+
+    return copy!() as any;
   }
 }
 
