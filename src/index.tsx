@@ -36,6 +36,10 @@ export type VgsShowReactNativeProps = {
     environment: 'live' | 'sandbox';
     customHeaders?: Record<string, any>;
   };
+  format?: {
+    pattern: string;
+    template: string;
+  };
 };
 
 const NATIVE_COMP_IDENTIFIER = 'VgsShowReactNativeView';
@@ -81,7 +85,6 @@ export class VgsShowAttribute extends React.Component<VgsShowReactNativeProps> {
         },
         android: () => {
           return new Promise((resolve, reject) => {
-            reqId = reqId + 1;
             promiseMap[reqId] = { resolve, reject };
 
             UIManager.dispatchViewManagerCommand(handle, 'revealData' as any, [
@@ -124,6 +127,19 @@ export class VgsShowAttribute extends React.Component<VgsShowReactNativeProps> {
         }}
       />
     );
+  }
+
+  copyToClipboard():void{
+    const handle = findNodeHandle(this._nativeRef);
+    const copy =  Platform.select({
+        ios: () => {
+          NativeModules.VgsShowReactNativeViewManager.copyToClipboard(handle);
+        },
+        android: () => {
+            UIManager.dispatchViewManagerCommand(handle, 'copyToClipboard' as any, []);
+        }
+    });
+    copy()
   }
 }
 

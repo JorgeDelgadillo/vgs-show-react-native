@@ -42,6 +42,10 @@ class VgsAttrInstance(context: ReactContext) : LinearLayout(context) {
     vgsShow.subscribe(this.vgsText);
   }
 
+  fun copyToClipboard(){
+      vgsText.copyToClipboard()
+  }
+
   fun revealData(
     reqId: Int,
     path: String,

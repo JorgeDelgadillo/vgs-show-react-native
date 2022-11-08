@@ -40,6 +40,20 @@ class VgsShowReactNativeViewManager : SimpleViewManager<View>() {
         args.getString(2) as String,
         args.getMap(3) as ReadableMap
       )
+      "copyToClipboard" -> (view as VgsAttrInstance).copyToClipboard()
+    }
+  }
+
+  @ReactProp(name = "format")
+  fun setFormat(view: View, format: ReadableMap) {
+    val pattern = format.getString("pattern");
+    val template = format.getString("template");
+
+    pattern?.let {
+      val pat = it;
+      template?.let {
+        (view as VgsAttrInstance).vgsText.addTransformationRegex(pat.toRegex(), it);
+      }
     }
   }
 

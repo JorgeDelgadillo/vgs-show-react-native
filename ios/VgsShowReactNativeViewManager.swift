@@ -17,6 +17,15 @@ class VgsShowReactNativeViewManager: RCTViewManager {
             component.revealData(path: path, method: method, payload: payload, resolve: resolve, reject: reject)
         }
     }
+
+    @objc(copyToClipboard:) func copyToClipboard(_ node: NSNumber) {
+        DispatchQueue.main.async {
+            let component = self.bridge.uiManager.view(
+                forReactTag: node
+            ) as! VgsShowReactNativeView
+            component.copyToClipboard()
+        }
+    }
 }
 
 class VgsShowReactNativeView : UIView, VGSLabelDelegate {
@@ -40,6 +49,25 @@ class VgsShowReactNativeView : UIView, VGSLabelDelegate {
                 
                 if (vgsShow != nil) {
                     vgsShow?.customHeaders = customHeaders;
+                }
+            }
+        }
+    }
+
+    @objc func copyToClipboard() {
+        if (attributeLabel == nil) {
+            return;
+        }
+        attributeLabel.copyTextToClipboard(format: .raw)
+    }
+    
+
+    @objc var format: NSDictionary = NSDictionary() {
+        didSet {
+            if let pattern = format["pattern"] as? String {
+                if let template = format["template"] as? String{
+                    let regex = try! NSRegularExpression(pattern: pattern, options: [])
+                    attributeLabel.addTransformationRegex(regex, template: template)
                 }
             }
         }
